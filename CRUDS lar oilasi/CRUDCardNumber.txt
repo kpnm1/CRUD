@@ -1,0 +1,165 @@
+namespace src
+{
+    internal class Program
+    {
+
+        public static List<string> CardNumbers = new List<string>();
+
+        public static void DataSeed()
+        {
+            CardNumbers.Add("8600312913856858");
+            CardNumbers.Add("9860645797226124");
+            CardNumbers.Add("9860121345488696");
+            CardNumbers.Add("8600457945414646");
+            CardNumbers.Add("8600798442197417");
+            CardNumbers.Add("9860111222334466");
+        }
+
+        static void Main(string[] args)
+        {
+            // CRUD Card number
+
+            DataSeed();
+            StartFrontend();
+        }
+
+        public static void StartFrontend()
+        {
+            while (true)
+            {
+                Console.WriteLine("1. Add card number");
+                Console.WriteLine("2. Delete card number");
+                Console.WriteLine("3. Update card number");
+                Console.WriteLine("4. Read");
+                Console.Write("Choose: ");
+                var number = int.Parse(Console.ReadLine());
+
+                if (number == 1)
+                {
+                    Console.Write("Enter card number: ");
+                    var cardNumber = Console.ReadLine();
+                    var result = AddCardNumber(cardNumber);
+                    if (result >= 0)
+                    {
+                        Console.WriteLine($"Card number successfully \nadded to '{result}' index");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error, something wrong!");
+                    }
+                }
+                else if (number == 2)
+                {
+                    Console.Write("Enter deletable card number: ");
+                    var text = Console.ReadLine();
+                    var result = DeleteCardNumber(text);
+                    if (result is true)
+                    {
+                        Console.WriteLine("Card number successfully deleted!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error, something wrong!");
+                    }
+                }
+                else if (number == 3)
+                {
+                    Console.Write("Enter updatable card number: ");
+                    var oldCNumber = Console.ReadLine();
+                    Console.Write("Enter new card number: ");
+                    var newCNumber = Console.ReadLine();
+
+                    var result = UpdateCardNumber(oldCNumber, newCNumber);
+                    if (result is true)
+                    {
+                        Console.WriteLine("Card number successfully updated!");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error, something wrong!");
+                    }
+                }
+                else if (number == 4)
+                {
+                    var response = CardNumbers;
+                    foreach (var cardNumber in response)
+                    {
+                        Console.WriteLine(cardNumber);
+                    }
+                }
+
+                Console.ReadKey();
+                Console.Clear();
+            }
+        }
+
+        public static int AddCardNumber(string cardNumber)
+        {
+            var intValue = -1;
+            var exists = CardNumbers.Contains(cardNumber);
+            var isValidFormat = CheckFormat(cardNumber);
+            if (exists is true || isValidFormat is false)
+            {
+                return intValue;
+            }
+            CardNumbers.Add(cardNumber);
+
+            return CardNumbers.Count + intValue;
+        }
+
+        public static bool DeleteCardNumber(string cardNumber)
+        {
+            var boolValue = true;
+            var exists = CardNumbers.Contains(cardNumber);
+            if (exists is true)
+            {
+                CardNumbers.Remove(cardNumber);
+            }
+            else
+            {
+                boolValue = false;
+            }
+
+            return boolValue;
+        }
+
+        public static bool UpdateCardNumber(string oldCardNumber, string newCardNumber)
+        {
+            var boolValue = true;
+            var exists = CardNumbers.Contains(oldCardNumber);
+            var isValidFormat = CheckFormat(newCardNumber);
+            if (exists is true && isValidFormat is true)
+            {
+                var indexOfOLdCardNumber = CardNumbers.IndexOf(oldCardNumber);
+                CardNumbers[indexOfOLdCardNumber] = newCardNumber;
+            }
+            else
+            {
+                boolValue = false;
+            }
+
+            return boolValue;
+        }
+
+        public static bool CheckFormat(string cardNumber)
+        {
+            var length = cardNumber.Length == 16;
+            var isNumber = true;
+            foreach (var number in cardNumber)
+            {
+                if (char.IsDigit(number) is false)
+                {
+                    isNumber = false;
+                    break;
+                }
+            }
+
+            return isNumber && length;
+        }
+
+        public static List<string> ShowCardNumbers()
+        {
+            return CardNumbers;
+        }
+    }
+}
